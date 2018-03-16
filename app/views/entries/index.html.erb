@@ -1,0 +1,71 @@
+<style>
+	#sender{
+		font-size:24px;
+		color:blue
+	}
+	#text-time_sent{
+		font-size:9px;
+	}
+	#single_message{
+		width:500px;
+	}
+	#messages-list{
+		border: 1px solid black;
+		max-width: 520px;
+		margin: auto;
+	}
+	#search-bar{
+		max-width: 520px;
+		margin: auto;
+	}
+	#write-message{
+		max-width:520px;
+		margin: auto;
+	}
+</style>
+<p id="notice"><%= notice %></p>
+
+<h1 align ="center">Freedom Board</h1>
+<div align="left" id="write-message">
+	<%= form_for @new_entry, url: {action: "create"} do |f| %>
+	  <%= label_tag(:message, "Message:") %>
+	  <%= f.text_area :message, size: "70x8" %>
+	  <br>
+	  <%= label_tag(:sender, "Sender:") %>
+	  <%= f.text_field :sender %>
+	  <br>
+	  <%= f.submit "Post" %>
+	<% end %>
+</div>
+<br>
+<div align="right" id="search-bar">
+	<form action = '/entries'>
+		<input type="text" name="to_search">
+		<button type="submit">Search!</button>
+	</form>
+</div>
+<br>
+<div id="messages-list" align="center">
+	<br>
+    <% @entries.each do |entry| %>
+		<% if(params["to_search"] == nil or entry.sender.include?(params["to_search"]) or entry.message.include?(params["to_search"]))%>
+			<table id="single_message">
+			  <tr>
+				<% if(@x%2==0) %>
+					<td id="sender"><%= entry.sender %></td>
+					<td id="time_sent" align="right"><%= entry.created_at %></td>
+				<% else %>
+					<td id="time_sent"><%= entry.created_at %></td>
+					<td id="sender" align="right"><%= entry.sender %></td>
+				<% end %>
+			  </tr>
+			  <tr>
+				<td colspan="2"><%= entry.message %></td>
+			  </tr>
+			</table>
+			<hr width="500px">
+			<% @x = @x+1 %>
+		<% end %>
+    <% end %>
+</div>
+<br>
